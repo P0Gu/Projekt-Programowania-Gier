@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Wprowadzenie do Programowania Gier\\Projekt Programowania Gier\\Killer Prices\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BAC36542-C485-4565-5812-9252C45ACC2B}|Assembly-CSharp.csproj|d:\\wprowadzenie do programowania gier\\projekt programowania gier\\killer prices\\assets\\controls.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAC36542-C485-4565-5812-9252C45ACC2B}|Assembly-CSharp.csproj|solutionrelative:assets\\controls.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Controls.cs",
+              "DocumentMoniker": "D:\\Wprowadzenie do Programowania Gier\\Projekt Programowania Gier\\Killer Prices\\Assets\\Controls.cs",
+              "RelativeDocumentMoniker": "Assets\\Controls.cs",
+              "ToolTip": "D:\\Wprowadzenie do Programowania Gier\\Projekt Programowania Gier\\Killer Prices\\Assets\\Controls.cs",
+              "RelativeToolTip": "Assets\\Controls.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwAgAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-25T10:59:57.373Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
