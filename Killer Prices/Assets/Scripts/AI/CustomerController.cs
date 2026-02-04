@@ -229,11 +229,35 @@ namespace KillerPrices.AI
             targetSlot.Clear();
         }
 
+        public void MoveToQueuePosition(Vector3 pos)
+        {
+             if (agent != null && agent.enabled && agent.gameObject.activeSelf) 
+             {
+                 agent.SetDestination(pos);
+             }
+        }
+
+
         private void GoToCounter()
         {
             CurrentState = CustomerState.WalkingToCounter;
             agent.isStopped = false;
-            agent.SetDestination(counterTarget.position);
+            
+            // Queue Logic: Try to find the script on the target, or its parent
+            var counterScript = counterTarget.GetComponent<CounterInteraction>();
+            if (counterScript == null) counterScript = counterTarget.GetComponentInParent<CounterInteraction>();
+            if (counterScript == null) counterScript = FindFirstObjectByType<CounterInteraction>(); // Last resort
+
+            if (counterScript != null)
+            {
+                Vector3 queuePos = counterScript.RegisterCustomer(this);
+                agent.SetDestination(queuePos);
+            }
+            else
+            {
+                // Fallback
+                agent.SetDestination(counterTarget.position);
+            }
             
             // Ukrywamy dymek TYLKO jeśli NIE pokazujemy feedbacku ("Biorę!")
             if(bubbleObject && !isShowingFeedback) bubbleObject.SetActive(false);
@@ -241,17 +265,34 @@ namespace KillerPrices.AI
             StartCoroutine(WaitForCounterArrival());
         }
 
+
         private IEnumerator WaitForCounterArrival()
         {
             while (agent.pathPending || agent.remainingDistance > stopDistance) yield return null;
             
             CurrentState = CustomerState.WaitingAtCounter;
             agent.isStopped = true;
+            
+            // Look at counter
+            if (counterTarget != null)
+            {
+                Vector3 lookPos = counterTarget.position;
+                lookPos.y = transform.position.y;
+                transform.LookAt(lookPos);
+            }
         }
 
         public void LeaveStore(bool happy)
         {
             StopAllCoroutines();
+            
+            // Unregister from queue if necessary
+            if (CurrentState == CustomerState.WalkingToCounter || CurrentState == CustomerState.WaitingAtCounter)
+            {
+                var counterScript = counterTarget.GetComponent<CounterInteraction>();
+                if (counterScript != null) counterScript.UnregisterCustomer(this);
+            }
+            
             // UWAGA: StopAllCoroutines zatrzyma też HideFeedback! Musimy go wznowić ręcznie jeśli trwa.
             
             CurrentState = CustomerState.Leaving;

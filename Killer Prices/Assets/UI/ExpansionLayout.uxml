@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="ExpansionContainer" style="flex-grow: 1; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.7); display: none;">
+        <ui:VisualElement name="Panel" style="width: 500px; background-color: rgba(30, 30, 30, 0.9); border-radius: 20px; padding: 30px; border-width: 2px; border-color: rgba(255, 255, 255, 0.1);">
+            <ui:Label text="Rozbudowa Sklepu" style="font-size: 32px; color: rgb(255, 255, 255); -unity-font-style: bold; margin-bottom: 20px; -unity-text-align: middle-center;" />
+            <ui:Label text="Czy chcesz odblokować ten obszar?" style="font-size: 18px; color: rgb(200, 200, 200); margin-bottom: 20px; -unity-text-align: middle-center;" />
+            
+            <ui:Label name="CostLabel" text="Koszt: $1000" style="font-size: 24px; color: rgb(100, 255, 100); -unity-font-style: bold; margin-bottom: 10px; -unity-text-align: middle-center;" />
+            <ui:Label name="LevelLabel" text="Wymagany Poziom: 5" style="font-size: 16px; color: rgb(255, 100, 100); margin-bottom: 30px; -unity-text-align: middle-center;" />
+            
+            <ui:VisualElement style="flex-direction: row; justify-content: space-around;">
+                <ui:Button name="CancelButton" text="Anuluj" style="width: 150px; height: 50px; background-color: rgba(255, 100, 100, 0.2); border-width: 1px; border-color: rgba(255, 100, 100, 0.5); border-radius: 10px; color: white; font-size: 18px;" />
+                <ui:Button name="ConfirmButton" text="Kup" style="width: 150px; height: 50px; background-color: rgba(100, 255, 100, 0.2); border-width: 1px; border-color: rgba(100, 255, 100, 0.5); border-radius: 10px; color: white; font-size: 18px; -unity-font-style: bold;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

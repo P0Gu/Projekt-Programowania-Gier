@@ -100,10 +100,15 @@ namespace KillerPrices.UI
 
         private void ConfirmPrice()
         {
-            if (currentSlot != null)
+            if (currentSlot != null && currentSlot.currentItem != null)
             {
-                currentSlot.currentPrice = currentEditPrice;
-                Debug.Log($"Ustawiono nową cenę dla {currentSlot.currentItem.displayName}: {currentEditPrice}");
+                // Set global price via Manager
+                if (PriceManager.Instance != null)
+                {
+                    PriceManager.Instance.SetPrice(currentSlot.currentItem, currentEditPrice);
+                }
+                
+                // Debug.Log($"Ustawiono nową cenę dla {currentSlot.currentItem.displayName}: {currentEditPrice}");
             }
             Close();
         }

@@ -253,10 +253,22 @@ namespace KillerPrices.UI
                 nameLabel.AddToClassList("item-name");
                 card.Add(nameLabel);
 
-                // Price
-                var priceLabel = new Label($"${gun.baseCost}");
+                // Price (Cost)
+                var priceLabel = new Label($"Koszt: ${gun.baseCost}");
                 priceLabel.AddToClassList("item-price");
                 card.Add(priceLabel);
+
+                // Current Sell Price (New Feature)
+                int currentSellPrice = gun.baseSellPrice;
+                if (PriceManager.Instance != null)
+                {
+                    currentSellPrice = PriceManager.Instance.GetPrice(gun);
+                }
+                
+                var sellPriceLabel = new Label($"Cena: ${currentSellPrice}");
+                sellPriceLabel.style.fontSize = 14;
+                sellPriceLabel.style.color = new StyleColor(new Color(0.6f, 1f, 0.6f)); // Light Green
+                card.Add(sellPriceLabel);
 
                 // Buy Button logic
                 var buyBtn = new Button();

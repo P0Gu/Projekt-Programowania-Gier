@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="project://database/Assets/UI/CheckoutStyles.uss" />
+    <ui:VisualElement name="MainContainer" class="main-container">
+        <!-- Header -->
+        <ui:Label text="KASA FISKALNA" class="header-label" />
+
+        <!-- Middle: Items List -->
+        <ui:VisualElement class="list-container">
+            <ui:Label text="Zeskanowane Produkty:" class="section-title" />
+            <ui:ScrollView name="ItemsList" class="items-list" />
+        </ui:VisualElement>
+
+        <!-- Bottom: Totals & Input -->
+        <ui:VisualElement class="payment-container">
+            <ui:VisualElement class="totals-row">
+                <ui:Label name="TotalLabel" text="Suma: $0" class="total-label" />
+                <ui:Label name="PaidLabel" text="Otrzymano: $0" class="total-label" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="input-row">
+                <ui:Label text="Reszta:" class="input-label" />
+                <ui:TextField name="ChangeInput" class="change-input" />
+            </ui:VisualElement>
+
+            <ui:Button name="FinishButton" text="ZATWIERDŹ" class="finish-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

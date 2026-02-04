@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using KillerPrices.Data;
 using KillerPrices.Systems;
+using KillerPrices.Shop; // FIX: Import Shop namespace
 
 namespace KillerPrices.AI
 {
@@ -22,6 +23,9 @@ namespace KillerPrices.AI
         private void Update()
         {
             if (currentCustomers >= maxCustomers) return;
+
+            // NEW: Check if shop is open
+            if (ShopManager.Instance != null && !ShopManager.Instance.IsOpen) return;
 
             timer += Time.deltaTime;
             if (timer >= spawnInterval)
@@ -65,6 +69,12 @@ namespace KillerPrices.AI
             currentCustomers--;
             if (currentCustomers < 0) currentCustomers = 0;
             Debug.Log($"Klient wyszedł. W sklepie: {currentCustomers}/{maxCustomers}");
+        }
+
+        public void IncreaseCapacity(int amount)
+        {
+            maxCustomers += amount;
+            Debug.Log($"CustomerSpawner: Limit klientów zwiększony o {amount}. Nowy limit: {maxCustomers}");
         }
     }
 }

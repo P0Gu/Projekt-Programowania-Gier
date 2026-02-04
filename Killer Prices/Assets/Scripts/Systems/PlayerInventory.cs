@@ -64,6 +64,29 @@ namespace KillerPrices.Systems
             SelectedSlotIndex = index;
             OnSelectionChanged?.Invoke(SelectedSlotIndex);
             Debug.Log($"Ekwipunek: Wybrano slot {index + 1}");
+
+            CheckForFurniture();
+        }
+
+        private void CheckForFurniture()
+        {
+            var item = GetSelectedItem();
+            if (item != null && item.itemType == ItemType.Furniture)
+            {
+                if (KillerPrices.Placement.PlacementManager.Instance != null)
+                {
+                    Debug.Log("Furniture selected: Starting Placement Mode.");
+                    KillerPrices.Placement.PlacementManager.Instance.StartPlacement(item);
+                }
+            }
+            else
+            {
+                // If we switched to a gun or empty hand, cancel placement
+                if (KillerPrices.Placement.PlacementManager.Instance != null)
+                {
+                    KillerPrices.Placement.PlacementManager.Instance.CancelPlacement();
+                }
+            }
         }
 
         public bool AddItem(GunData gun)
@@ -73,6 +96,7 @@ namespace KillerPrices.Systems
             {
                 slots[SelectedSlotIndex] = gun;
                 OnSlotChanged?.Invoke(SelectedSlotIndex, gun);
+                CheckForFurniture(); // Update state if we picked up something into hand
                 return true;
             }
 
@@ -127,6 +151,7 @@ namespace KillerPrices.Systems
                 {
                     slots[i] = null;
                     OnSlotChanged?.Invoke(i, null);
+                    if (i == SelectedSlotIndex) CheckForFurniture(); // Update if current item removed
                     return true;
                 }
             }
@@ -137,13 +162,15 @@ namespace KillerPrices.Systems
         public void UseCurrentItem()
         {
             var item = GetSelectedItem();
-            if (item != null && item.itemType == ItemType.Furniture)
+            // Logic for Guns?
+            if (item != null && item.itemType == ItemType.Weapon)
             {
-                if (KillerPrices.Placement.PlacementManager.Instance != null)
-                {
-                    KillerPrices.Placement.PlacementManager.Instance.StartPlacement(item);
-                }
+                Debug.Log($"Using Weapon: {item.displayName}");
+                // Weapon logic here
             }
+            
+            // Furniture logic is now handled by PlacementManager's internal update loop
+            // So we don't start it here.
         }
     }
 }

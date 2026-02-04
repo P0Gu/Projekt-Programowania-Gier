@@ -13,7 +13,12 @@ namespace KillerPrices.Shop
     {
         public Transform point; // Punkt w przestrzeni (ItemSpot)
         public GunData currentItem;
-        public int currentPrice;
+        
+        // Refactored to use Global PriceManager
+        public int currentPrice => (currentItem != null && PriceManager.Instance != null) 
+                                    ? PriceManager.Instance.GetPrice(currentItem) 
+                                    : 0;
+
         public GameObject visualModelInstance;
 
         public bool IsOccupied => currentItem != null;
@@ -21,7 +26,7 @@ namespace KillerPrices.Shop
         public void Place(GunData gun)
         {
             currentItem = gun;
-            currentPrice = gun.baseSellPrice;
+            // currentPrice is now dynamic, no need to set
             
             if (visualModelInstance != null) Object.Destroy(visualModelInstance);
             if (gun.modelPrefab != null && point != null)
@@ -34,7 +39,7 @@ namespace KillerPrices.Shop
         {
             if (visualModelInstance != null) Object.Destroy(visualModelInstance);
             currentItem = null;
-            currentPrice = 0;
+            // currentPrice becomes 0 automatically via property
         }
     }
 

@@ -89,43 +89,65 @@ namespace KillerPrices.Placement
             // Debug the ray visually in Scene View
             Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red);
 
-            // Safety check for layer mask
+            // Ensure reasonable layers if not set
             if (floorLayer.value == 0)
             {
-                Debug.LogWarning("PlacementManager: Floor Layer is not set! Defaulting to 'Default' layer.");
-                floorLayer = LayerMask.GetMask("Default");
+                floorLayer = LayerMask.GetMask("Default", "Ground", "Terrain"); // Try common layers
+                if (floorLayer.value == 0) floorLayer = 1; // Fallback to Default (bit 0)
             }
 
-            // Increased distance to 20f
-            if (Physics.Raycast(ray, out RaycastHit hit, 20f, floorLayer))
+            // Range reduced to 5f as requested
+            if (Physics.Raycast(ray, out RaycastHit hit, 5f, floorLayer))
             {
-                // Surface Angle Check (Anti-Levitation / Wall Placement Prevention)
+                // Surface Angle Check
                 float angle = Vector3.Angle(hit.normal, Vector3.up);
-                
-                // Allow only flat surfaces (roughly < 45 degrees slope)
                 if (angle > 45f)
                 {
                     currentGhost.SetActive(false);
                     return;
                 }
 
-                currentGhost.SetActive(true);
+                if (!currentGhost.activeSelf) currentGhost.SetActive(true);
                 
                 // Use Cached Offset
-                Vector3 finalPosition = hit.point + Vector3.up * cachedBottomOffset;
+                Vector3 finalPosition = hit.point;
+                finalPosition.y += cachedBottomOffset;
 
                 currentGhost.transform.position = finalPosition;
                 currentGhost.transform.rotation = Quaternion.Euler(0, currentYRotation, 0);
+
+                UpdateGhostVisuals(CheckPlacementValidity());
             }
             else
             {
-                currentGhost.SetActive(false); // Hide if too far or invalid surface
+                currentGhost.SetActive(false); 
+            }
+        }
+
+        private void UpdateGhostVisuals(bool isValid)
+        {
+            Material targetMat = isValid ? validPreviewMaterial : invalidPreviewMaterial;
+            if (targetMat == null)
+            {
+                // Keep this warning as it's a configuration error
+                Debug.LogWarning("PlacementManager: Brak przypisanych materiałów (Valid/Invalid) w Inspektorze!");
+                return; 
+            }
+
+            var renderers = currentGhost.GetComponentsInChildren<Renderer>();
+            // if (renderers.Length == 0) Debug.LogWarning("PlacementManager: Duch nie ma Rendererów!");
+
+            foreach(var r in renderers)
+            {
+                // Assign to ALL material slots to fully override visuals
+                Material[] newMats = new Material[r.sharedMaterials.Length];
+                for (int i = 0; i < newMats.Length; i++) newMats[i] = targetMat;
+                r.sharedMaterials = newMats;
             }
         }
 
         private float GetPivotToBottomOffset(GameObject go)
         {
-            // Calculate bounds of all renderers
             var renderers = go.GetComponentsInChildren<Renderer>();
             if (renderers.Length == 0) return 0f;
 
@@ -135,12 +157,6 @@ namespace KillerPrices.Placement
                 combinedBounds.Encapsulate(renderers[i].bounds);
             }
 
-            // Distance from Pivot (transform.position) to Bottom (bounds.min.y)
-            // Note: bounds.min.y is world space. We need purely the vertical distance.
-            // But since 'go' is the ghost, its position is what we are setting.
-            // We can calculate local offset approx. 
-            // Better: use local bounds or just relative Y.
-            
             float pivotY = go.transform.position.y;
             float bottomY = combinedBounds.min.y;
             
@@ -175,12 +191,40 @@ namespace KillerPrices.Placement
             }
         }
 
+        // Insert GetGhostBounds helper if needed or reuse logic
+
+        private Bounds GetGhostBounds()
+        {
+             var renderers = currentGhost.GetComponentsInChildren<Renderer>();
+             if (renderers.Length == 0) return new Bounds(currentGhost.transform.position, Vector3.one);
+
+             Bounds b = renderers[0].bounds;
+             for(int i=1; i<renderers.Length; i++) b.Encapsulate(renderers[i].bounds);
+             return b;
+        }
+
         private bool CheckPlacementValidity()
         {
-            // Simple check: Is ghost active? (on floor)
             if (!currentGhost.activeSelf) return false;
 
-            // TODO: Add complex BoxOverlap check with obstacleLayer
+            // Calculate bounds for OverlapBox
+            Bounds b = GetGhostBounds();
+            
+            // Shrink slightly to avoid touching floor or being too strict
+            Vector3 center = b.center;
+            Vector3 halfExtents = b.extents * 0.95f; 
+
+            // Check for collisions
+            if (obstacleLayer.value == 0) obstacleLayer = LayerMask.GetMask("Default", "Furniture", "Player");
+            
+            Collider[] hits = Physics.OverlapBox(center, halfExtents, currentGhost.transform.rotation, obstacleLayer);
+            
+            if (hits.Length > 0)
+            {
+                // Debug.Log($"Kolizja z: {hits[0].name}");
+                return false;
+            }
+
             return true; 
         }
 

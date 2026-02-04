@@ -1,0 +1,109 @@
+.main-container {
+    position: absolute;
+    width: 400px;
+    height: 600px;
+    right: 50px;
+    bottom: 50px;
+    background-color: rgba(30, 30, 30, 0.95);
+    border-radius: 15px;
+    border-color: rgb(80, 80, 80);
+    border-width: 2px;
+    padding: 20px;
+    display: none; /* Hidden by default */
+}
+
+.header-label {
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 20px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(100, 100, 100);
+    padding-bottom: 10px;
+}
+
+.section-title {
+    font-size: 16px;
+    color: rgb(200, 200, 200);
+    margin-bottom: 5px;
+}
+
+.list-container {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.items-list {
+    flex-grow: 1;
+}
+
+.item-row-label {
+    font-size: 18px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: normal;
+}
+
+.payment-container {
+    background-color: rgba(50, 50, 50, 0.5);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.totals-row {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.total-label {
+    font-size: 18px;
+    color: rgb(255, 255, 0);
+    -unity-font-style: bold;
+}
+
+.input-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.input-label {
+    font-size: 18px;
+    color: white;
+    margin-right: 10px;
+}
+
+.change-input {
+    flex-grow: 1;
+    height: 40px;
+    font-size: 20px;
+    -unity-text-align: middle-center;
+}
+
+.finish-button {
+    height: 50px;
+    background-color: rgb(0, 150, 0);
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: white;
+    border-radius: 8px;
+    border-width: 0;
+    transition-duration: 0.1s;
+}
+
+.finish-button:hover {
+    background-color: rgb(0, 180, 0);
+}
+
+.finish-button:active {
+    background-color: rgb(0, 120, 0);
+}
+
+.finish-button:disabled {
+    background-color: rgb(100, 100, 100);
+    color: rgb(180, 180, 180);
+}
