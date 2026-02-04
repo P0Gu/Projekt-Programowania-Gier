@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89ce50599eda2a4fb1548fdd1e90a25, type: 3}
+  m_Name: small_shelf
+  m_EditorClassIdentifier: Assembly-CSharp::KillerPrices.Data.GunData
+  id: 
+  itemType: 1
+  displayName: shelf
+  description: 
+  baseCost: 100
+  baseSellPrice: 0
+  requiredLevel: 0
+  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  modelPrefab: {fileID: 6435122309859818725, guid: b4fa624f8ee64394da4245eabda667af, type: 3}

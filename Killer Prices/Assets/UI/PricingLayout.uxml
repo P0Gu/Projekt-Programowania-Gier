@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="PricingStyles.uss" />
+    <ui:VisualElement name="PricingContainer" class="pricing-container hidden">
+        <ui:Label text="Nazwa Przedmiotu" name="ItemNameLabel" class="item-name" />
+        
+        <ui:VisualElement class="price-control-row">
+            <ui:Button text="-" name="DecreasePriceButton" class="adjust-btn" />
+            <ui:Label text="$100" name="PriceLabel" class="price-display" />
+            <ui:Button text="+" name="IncreasePriceButton" class="adjust-btn" />
+        </ui:VisualElement>
+
+        <ui:Label text="Zysk: $20" name="ProfitLabel" class="profit-display" />
+
+        <ui:VisualElement class="action-row">
+            <ui:Button text="Zatwierdź" name="ConfirmButton" class="action-btn confirm-btn" />
+            <ui:Button text="Zabierz" name="TakeItemButton" class="action-btn take-btn" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

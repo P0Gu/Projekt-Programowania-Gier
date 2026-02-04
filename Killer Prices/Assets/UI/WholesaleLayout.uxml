@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/WholesaleStyles.uss?fileID=7433441132597879392&amp;guid=c5042e04424c6e24695c02ed7149fb77&amp;type=3#WholesaleStyles" />
+    <ui:VisualElement name="Container" class="wholesale-container">
+        <ui:VisualElement class="header-row" picking-mode="Ignore">
+            <ui:Label text="HURTOWNIA" picking-mode="Ignore" class="title-label" />
+            <ui:Button text="X" name="CloseButton" class="close-button" />
+        </ui:VisualElement>
+        <ui:VisualElement class="tabs-container">
+            <ui:Button text="BRONIE" name="WeaponsTab" class="tab-button active" />
+            <ui:Button text="MEBLE" name="FurnitureTab" class="tab-button" />
+        </ui:VisualElement>
+        <ui:ScrollView name="ProductList" mode="Vertical" class="product-list" />
+    </ui:VisualElement>
+</ui:UXML>

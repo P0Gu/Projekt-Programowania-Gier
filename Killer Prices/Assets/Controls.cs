@@ -14,9 +14,21 @@ public class Controls : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
     }
+
+    private void Start()
+    {
+        // Try to load state if available
+        if (KillerPrices.Systems.PlayerStats.Instance != null)
+        {
+            KillerPrices.Systems.PlayerStats.Instance.ApplySavedState();
+        }
+    }
     
+    public bool IsLocked { get; set; } = false;
+
     void Update()
     {
+        if (IsLocked) return;
         Movement();
     }
 

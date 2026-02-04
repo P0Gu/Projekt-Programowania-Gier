@@ -1,0 +1,30 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="project://database/Assets/UI/HotbarStyles.uss" />
+    <ui:VisualElement name="HotbarContainer" class="hotbar-container">
+        <!-- Slot 1 -->
+        <ui:VisualElement name="Slot1" class="slot">
+            <ui:Label text="1" class="slot-number" />
+            <ui:VisualElement name="Icon" class="slot-icon" />
+        </ui:VisualElement>
+        <!-- Slot 2 -->
+        <ui:VisualElement name="Slot2" class="slot">
+            <ui:Label text="2" class="slot-number" />
+            <ui:VisualElement name="Icon" class="slot-icon" />
+        </ui:VisualElement>
+        <!-- Slot 3 -->
+        <ui:VisualElement name="Slot3" class="slot">
+            <ui:Label text="3" class="slot-number" />
+            <ui:VisualElement name="Icon" class="slot-icon" />
+        </ui:VisualElement>
+        <!-- Slot 4 -->
+        <ui:VisualElement name="Slot4" class="slot">
+            <ui:Label text="4" class="slot-number" />
+            <ui:VisualElement name="Icon" class="slot-icon" />
+        </ui:VisualElement>
+        <!-- Slot 5 -->
+        <ui:VisualElement name="Slot5" class="slot">
+            <ui:Label text="5" class="slot-number" />
+            <ui:VisualElement name="Icon" class="slot-icon" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

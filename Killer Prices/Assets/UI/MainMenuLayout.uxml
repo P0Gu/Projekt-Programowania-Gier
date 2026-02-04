@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="MainMenuStyles.uss" />
+    
+    <ui:VisualElement name="Container" class="main-menu-container">
+        <!-- Title -->
+        <ui:Label text="KILLER PRICES" class="game-title" />
+        
+        <!-- Button Panel -->
+        <ui:VisualElement class="menu-panel">
+            <ui:Button text="NOWA GRA" name="NewGameButton" class="menu-button" />
+            <ui:Button text="WCZYTAJ GRĘ" name="LoadGameButton" class="menu-button" />
+            <ui:Button text="USTAWIENIA" name="SettingsButton" class="menu-button" />
+            <ui:Button text="WYJŚCIE" name="QuitButton" class="menu-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

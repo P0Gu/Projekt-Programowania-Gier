@@ -1,0 +1,93 @@
+.pricing-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 10px;
+    padding: 20px;
+    align-items: center;
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+.item-name {
+    font-size: 20px;
+    color: white;
+    -unity-font-style: bold;
+    margin-bottom: 15px;
+}
+
+.price-control-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.price-display {
+    font-size: 24px;
+    color: #ffd700; /* Gold */
+    margin-left: 15px;
+    margin-right: 15px;
+    min-width: 80px;
+    -unity-text-align: middle-center;
+}
+
+.adjust-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    background-color: #444;
+    color: white;
+    border-radius: 5px;
+}
+
+.adjust-btn:hover {
+    background-color: #666;
+}
+
+.profit-display {
+    font-size: 14px;
+    color: #88ff88;
+    margin-bottom: 20px;
+}
+
+.action-row {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.action-btn {
+    flex-grow: 1;
+    height: 35px;
+    border-radius: 5px;
+    font-size: 16px;
+    -unity-font-style: bold;
+}
+
+.confirm-btn {
+    background-color: #2e8b57; /* SeaGreen */
+    color: white;
+    margin-right: 5px;
+}
+
+.confirm-btn:hover {
+    background-color: #3cb371;
+}
+
+.take-btn {
+    background-color: #cd5c5c; /* IndianRed */
+    color: white;
+    margin-left: 5px;
+}
+
+.take-btn:hover {
+    background-color: #ff6b6b;
+}

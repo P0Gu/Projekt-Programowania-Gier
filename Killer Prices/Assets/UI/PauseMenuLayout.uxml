@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="PauseMenuStyles.uss" />
+    
+    <ui:VisualElement name="PauseContainer" class="pause-container" style="display: none;">
+        <ui:VisualElement class="pause-panel">
+            <ui:Label text="PAUZA" name="PauseTitle" class="pause-title" />
+            
+            <ui:Button text="WZNÓW" name="ResumeButton" class="pause-button" />
+            <ui:Button text="ZAPISZ" name="SaveButton" class="pause-button" />
+            <ui:Button text="MENU GŁÓWNE" name="MenuButton" class="pause-button" />
+            <ui:Button text="WYJŚCIE" name="QuitButton" class="pause-button quit-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

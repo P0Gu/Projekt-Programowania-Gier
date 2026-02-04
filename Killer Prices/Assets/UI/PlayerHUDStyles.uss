@@ -1,0 +1,71 @@
+.hud-container {
+    padding: 20px;
+    align-items: flex-start;
+    picking-mode: Ignore;
+}
+
+.stats-panel {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.stat-box {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    padding: 8px 16px;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 15px;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+}
+
+.money-label {
+    font-size: 24px;
+    color: rgb(100, 255, 100);
+    -unity-font-style: bold;
+    margin-right: 5px;
+}
+
+.level-label {
+    font-size: 20px;
+    color: rgb(255, 220, 100);
+    -unity-font-style: bold;
+}
+
+.xp-bar-container {
+    width: 200px;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.xp-bar-fill {
+    height: 100%;
+    background-color: rgb(0, 150, 255);
+    width: 0%; /* Będzie zmieniane skryptem */
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    /* Tutaj można dodać background-image jeśli masz ikony */
+}
+
+/* Celownik */
+.crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    translate: -50% -50%;
+    border-width: 1px;
+    border-color: black;
+}

@@ -1,0 +1,33 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="MainMenuStyles.uss" />
+    <ui:Style src="SettingsStyles.uss" />
+    
+    <ui:VisualElement name="SettingsContainer" class="main-menu-container">
+        <ui:Label text="USTAWIENIA" class="game-title" style="font-size: 48px; margin-bottom: 30px;" />
+        
+        <ui:VisualElement class="menu-panel">
+            <!-- Language Section -->
+            <ui:Label text="JĘZYK / LANGUAGE" name="SettingsLangLabel" class="section-header" />
+            <ui:DropdownField label="Język" name="LanguageDropdown" class="settings-dropdown" />
+            <ui:VisualElement class="spacer" style="height: 20px;" />
+
+            <!-- Audio Section -->
+            <ui:Label text="DŹWIĘK" name="SettingsAudioLabel" class="section-header" />
+            <ui:Slider label="Głośność" name="VolumeSlider" low-value="0" high-value="1" value="1" class="settings-slider" />
+            
+            <ui:VisualElement class="spacer" style="height: 20px;" />
+            
+            <!-- Graphics Section -->
+            <ui:Label text="GRAFIKA" class="section-header" />
+            <ui:DropdownField label="Rozdzielczość" name="ResolutionDropdown" class="settings-dropdown" />
+            <ui:DropdownField label="Jakość" name="QualityDropdown" class="settings-dropdown" />
+            <ui:Toggle label="Pełny Ekran" name="FullscreenToggle" class="settings-toggle" />
+            
+            <ui:VisualElement class="spacer" style="height: 40px;" />
+            
+            <!-- Navigation -->
+            <ui:Button text="ZAPISZ" name="SaveButton" class="menu-button" style="background-color: rgba(50, 255, 50, 0.2); margin-bottom: 10px;" />
+            <ui:Button text="POWRÓT" name="BackButton" class="menu-button" style="background-color: rgba(255, 50, 50, 0.2);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

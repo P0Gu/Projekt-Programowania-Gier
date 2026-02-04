@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="project://database/Assets/UI/PlayerHUDStyles.uss?fileID=7433441132597879392&amp;guid=82f483dd62278a549a1169d91984ebca&amp;type=3#PlayerHUDStyles" />
+    <ui:VisualElement name="HUDContainer" class="hud-container">
+        <!-- Panel Pieniędzy -->
+        <ui:VisualElement name="MoneyBox" class="stat-box">
+            <ui:Label text="$" class="money-label" />
+            <ui:Label text="1000" name="MoneyText" class="money-label" />
+        </ui:VisualElement>
+
+        <!-- Panel Poziomu i XP -->
+        <ui:VisualElement name="LevelBox" class="stat-box">
+            <ui:Label text="LVL" class="level-label" style="margin-right: 5px; color:white;" />
+            <ui:Label text="1" name="LevelText" class="level-label" />
+        </ui:VisualElement>
+        
+        <ui:VisualElement name="XPContainer" class="xp-bar-container">
+            <ui:VisualElement name="XPFill" class="xp-bar-fill" />
+        </ui:VisualElement>
+        
+        <!-- Celownik -->
+        <ui:VisualElement name="Crosshair" class="crosshair" />
+    </ui:VisualElement>
+</ui:UXML>
