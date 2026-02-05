@@ -18,7 +18,7 @@
             <ui:VisualElement class="spacer" style="height: 20px;" />
             
             <!-- Graphics Section -->
-            <ui:Label text="GRAFIKA" class="section-header" />
+            <ui:Label text="GRAFIKA" name="SettingsGraphicsLabel" class="section-header" />
             <ui:DropdownField label="Rozdzielczość" name="ResolutionDropdown" class="settings-dropdown" />
             <ui:DropdownField label="Jakość" name="QualityDropdown" class="settings-dropdown" />
             <ui:Toggle label="Pełny Ekran" name="FullscreenToggle" class="settings-toggle" />

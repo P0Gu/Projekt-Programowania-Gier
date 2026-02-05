@@ -112,9 +112,9 @@ namespace KillerPrices.UI
 
         private void SaveGame()
         {
-            if (PlayerStats.Instance != null)
+            if (SaveManager.Instance != null)
             {
-                PlayerStats.Instance.Save();
+                SaveManager.Instance.SaveGame();
                 
                 // Optional: Show "Saved" feedback, for now just log
                 Debug.Log("UI: Game Saved via Pause Menu.");
@@ -125,6 +125,17 @@ namespace KillerPrices.UI
 
         private void LoadMainMenu()
         {
+            // Auto-Save before leaving
+            if (SaveManager.Instance != null) SaveManager.Instance.SaveGame();
+
+            // Cleanup: Destroy player to avoid duplicate AudioListener in Main Menu
+            var player = FindFirstObjectByType<Controls>();
+            if (player != null)
+            {
+                Debug.Log("PauseMenu: Destroying player before loading Main Menu to avoid duplicate AudioListener.");
+                Destroy(player.gameObject);
+            }
+
             Time.timeScale = 1f; // Important reset
             IsPaused = false;
             SceneManager.LoadScene(mainMenuScene);
@@ -132,6 +143,9 @@ namespace KillerPrices.UI
 
         private void QuitGame()
         {
+            // Auto-Save before quitting
+            if (SaveManager.Instance != null) SaveManager.Instance.SaveGame();
+
             Debug.Log("Quitting Game...");
             Application.Quit();
 #if UNITY_EDITOR

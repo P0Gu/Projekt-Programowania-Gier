@@ -3,13 +3,11 @@
     <ui:VisualElement name="HUDContainer" class="hud-container">
         <!-- Panel Pieniędzy -->
         <ui:VisualElement name="MoneyBox" class="stat-box">
-            <ui:Label text="$" class="money-label" />
             <ui:Label text="1000" name="MoneyText" class="money-label" />
         </ui:VisualElement>
 
         <!-- Panel Poziomu i XP -->
         <ui:VisualElement name="LevelBox" class="stat-box">
-            <ui:Label text="LVL" class="level-label" style="margin-right: 5px; color:white;" />
             <ui:Label text="1" name="LevelText" class="level-label" />
         </ui:VisualElement>
         
@@ -17,7 +15,13 @@
             <ui:VisualElement name="XPFill" class="xp-bar-fill" />
         </ui:VisualElement>
         
+        
         <!-- Celownik -->
         <ui:VisualElement name="Crosshair" class="crosshair" />
+        
+        <!-- Interaction Prompt -->
+        <ui:VisualElement name="InteractionPrompt" class="interaction-prompt">
+            <ui:Label text="Press [E] to interact" name="InteractionPromptText" class="interaction-prompt-text" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

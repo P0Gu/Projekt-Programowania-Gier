@@ -199,6 +199,8 @@ namespace KillerPrices.UI
             UnityEngine.Cursor.lockState = CursorLockMode.None;
             UnityEngine.Cursor.visible = true;
 
+            Time.timeScale = 0f;
+
             SwitchTab(currentTab); // Refresh and highlight
         }
 
@@ -217,6 +219,8 @@ namespace KillerPrices.UI
 
             UnityEngine.Cursor.lockState = CursorLockMode.Locked;
             UnityEngine.Cursor.visible = false;
+            
+            Time.timeScale = 1f;
         }
 
         private void RefreshList()
@@ -232,7 +236,16 @@ namespace KillerPrices.UI
             foreach (var gun in availableGuns)
             {
                 if (gun == null) continue;
-                if (gun.itemType != currentTab) continue; // Filter by Tab
+                
+                // Filter logic: Furniture tab includes both Furniture and CeilingItem
+                if (currentTab == ItemType.Furniture)
+                {
+                    if (gun.itemType != ItemType.Furniture && gun.itemType != ItemType.CeilingItem) continue;
+                }
+                else
+                {
+                    if (gun.itemType != currentTab) continue; 
+                }
 
                 // Create Card
                 var card = new VisualElement();
@@ -254,7 +267,8 @@ namespace KillerPrices.UI
                 card.Add(nameLabel);
 
                 // Price (Cost)
-                var priceLabel = new Label($"Koszt: ${gun.baseCost}");
+                string costText = loc != null ? loc.GetTranslation("WS_COST") : "Koszt: $";
+                var priceLabel = new Label($"{costText}{gun.baseCost}");
                 priceLabel.AddToClassList("item-price");
                 card.Add(priceLabel);
 
@@ -265,7 +279,8 @@ namespace KillerPrices.UI
                     currentSellPrice = PriceManager.Instance.GetPrice(gun);
                 }
                 
-                var sellPriceLabel = new Label($"Cena: ${currentSellPrice}");
+                string priceText = loc != null ? loc.GetTranslation("WS_PRICE") : "Cena: $";
+                var sellPriceLabel = new Label($"{priceText}{currentSellPrice}");
                 sellPriceLabel.style.fontSize = 14;
                 sellPriceLabel.style.color = new StyleColor(new Color(0.6f, 1f, 0.6f)); // Light Green
                 card.Add(sellPriceLabel);
@@ -280,7 +295,8 @@ namespace KillerPrices.UI
                     buyBtn.text = $"{lockedText} {gun.requiredLevel}";
                     buyBtn.SetEnabled(false);
                     
-                    var lockLabel = new Label("LOCKED");
+                    string lockMsg = loc != null ? loc.GetTranslation("WS_LOCKED_LABEL") : "ZABLOKOWANE";
+                    var lockLabel = new Label(lockMsg);
                     lockLabel.AddToClassList("locked-label");
                     card.Add(lockLabel);
                 }
@@ -299,15 +315,25 @@ namespace KillerPrices.UI
         {
             if (PlayerStats.Instance != null && DeliveryManager.Instance != null)
             {
+                Debug.Log($"WholesaleUI: BuyGun used. Cost: {gun.baseCost}, Player Money: {PlayerStats.Instance.Money}");
                 if (PlayerStats.Instance.SpendMoney(gun.baseCost))
                 {
                     DeliveryManager.Instance.SpawnOrder(gun);
-                    Debug.Log($"Zamówiono: {gun.displayName}");
+                    string orderMsg = LocalizationManager.Instance != null ? LocalizationManager.Instance.GetTranslation("WS_ORDERED") : "Zamówiono: ";
+                    Debug.Log($"{orderMsg}{gun.displayName}");
                 }
                 else
                 {
-                    Debug.Log("Za mało pieniędzy!");
+                    string lockedMsg = LocalizationManager.Instance != null ? LocalizationManager.Instance.GetTranslation("WS_LOCKED_MSG") : "Za mało pieniędzy!";
+                    Debug.Log($"{lockedMsg} (Required: {gun.baseCost}, Have: {PlayerStats.Instance.Money})");
                 }
+            }
+            else
+            {
+                if (PlayerStats.Instance == null)
+                    Debug.LogError("WholesaleUI: PlayerStats Instance is NULL!");
+                if (DeliveryManager.Instance == null)
+                    Debug.LogError("WholesaleUI: DeliveryManager Instance is NULL! Make sure it exists in the Scene.");
             }
         }
     }

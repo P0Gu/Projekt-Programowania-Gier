@@ -17,11 +17,11 @@ public class Controls : MonoBehaviour
 
     private void Start()
     {
-        // Try to load state if available
-        if (KillerPrices.Systems.PlayerStats.Instance != null)
-        {
-            KillerPrices.Systems.PlayerStats.Instance.ApplySavedState();
-        }
+        // State loading is now handled by SaveManager.LoadGame() which should be called by a Menu or Game Manager.
+        // if (KillerPrices.Systems.PlayerStats.Instance != null)
+        // {
+        //    // KillerPrices.Systems.PlayerStats.Instance.ApplySavedState();
+        // }
     }
     
     public bool IsLocked { get; set; } = false;

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89ce50599eda2a4fb1548fdd1e90a25, type: 3}
+  m_Name: aug
+  m_EditorClassIdentifier: Assembly-CSharp::KillerPrices.Data.GunData
+  id: aug
+  itemType: 0
+  itemSize: 1
+  displayName: aug
+  description: 
+  baseCost: 300
+  baseSellPrice: 400
+  requiredLevel: 1
+  icon: {fileID: 21300000, guid: 10df361e2cfb1ff4a98c37d80f515e6c, type: 3}
+  modelPrefab: {fileID: 3972786313660212628, guid: 7ac828c49a96f2746b0d0b95bcccfd80, type: 3}
+  shelfDisplayScale: 1.5
+  shelfDisplayRotation: {x: 0, y: -90, z: 0}
+  checkoutDisplayOffset: {x: 0, y: 0.2, z: 0}
+  checkoutDisplayRotation: {x: 0, y: -90, z: -90}
+  checkoutDisplayScale: 0.3

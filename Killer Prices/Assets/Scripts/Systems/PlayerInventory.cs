@@ -47,6 +47,29 @@ namespace KillerPrices.Systems
             if (keyboard.digit3Key.wasPressedThisFrame) SelectSlot(2);
             if (keyboard.digit4Key.wasPressedThisFrame) SelectSlot(3);
             if (keyboard.digit5Key.wasPressedThisFrame) SelectSlot(4);
+
+            if (keyboard.qKey.wasPressedThisFrame) DropCurrentItem();
+
+            // Scroll Wheel
+            var mouse = Mouse.current;
+            if (mouse != null)
+            {
+                float scroll = mouse.scroll.ReadValue().y;
+                if (scroll > 0)
+                {
+                    // Previous Slot (Cyclic)
+                    int newIndex = SelectedSlotIndex - 1;
+                    if (newIndex < 0) newIndex = slotsCount - 1;
+                    SelectSlot(newIndex);
+                }
+                else if (scroll < 0)
+                {
+                    // Next Slot (Cyclic)
+                    int newIndex = SelectedSlotIndex + 1;
+                    if (newIndex >= slotsCount) newIndex = 0;
+                    SelectSlot(newIndex);
+                }
+            }
         }
 
         public GunData GetSelectedItem()
@@ -71,7 +94,7 @@ namespace KillerPrices.Systems
         private void CheckForFurniture()
         {
             var item = GetSelectedItem();
-            if (item != null && item.itemType == ItemType.Furniture)
+            if (item != null && (item.itemType == ItemType.Furniture || item.itemType == ItemType.CeilingItem))
             {
                 if (KillerPrices.Placement.PlacementManager.Instance != null)
                 {
@@ -171,6 +194,71 @@ namespace KillerPrices.Systems
             
             // Furniture logic is now handled by PlacementManager's internal update loop
             // So we don't start it here.
+        }
+
+        public void DropCurrentItem()
+        {
+            var item = GetSelectedItem();
+            if (item == null) return;
+
+            // Stop placement if we are dropping the item we are placing
+            if ((item.itemType == ItemType.Furniture || item.itemType == ItemType.CeilingItem) && KillerPrices.Placement.PlacementManager.Instance != null && KillerPrices.Placement.PlacementManager.Instance.IsPlacing)
+            {
+                KillerPrices.Placement.PlacementManager.Instance.CancelPlacement();
+            }
+
+            if (DeliveryManager.Instance != null)
+            {
+                // Spawn box in front of player
+                Vector3 dropPos = transform.position + transform.forward * 1.5f + Vector3.up * 0.5f;
+                DeliveryManager.Instance.SpawnBox(item, dropPos);
+                
+                RemoveSelectedItem();
+                Debug.Log($"Wyrzucono przedmiot: {item.displayName}");
+            }
+            else
+            {
+                Debug.LogError("Nie można wyrzucić przedmiotu - brak DeliveryManager!");
+            }
+        }
+        public System.Collections.Generic.List<InventoryItemSaveData> GetInventorySaveData()
+        {
+            var data = new System.Collections.Generic.List<InventoryItemSaveData>();
+            for (int i = 0; i < slotsCount; i++)
+            {
+                if (slots[i] != null)
+                {
+                    data.Add(new InventoryItemSaveData
+                    {
+                        slotIndex = i,
+                        itemID = slots[i].id
+                    });
+                }
+            }
+            return data;
+        }
+
+        public void RestoreInventory(System.Collections.Generic.List<InventoryItemSaveData> data, ItemDatabase db)
+        {
+            if (data == null) return;
+            
+            // Clear current
+            slots = new GunData[slotsCount];
+            OnSelectionChanged?.Invoke(SelectedSlotIndex);
+
+            // Restore
+            foreach (var itemData in data)
+            {
+                if (itemData.slotIndex >= 0 && itemData.slotIndex < slotsCount)
+                {
+                    var item = db.GetItem(itemData.itemID);
+                    if (item != null)
+                    {
+                        slots[itemData.slotIndex] = item;
+                        OnSlotChanged?.Invoke(itemData.slotIndex, item);
+                    }
+                }
+            }
         }
     }
 }

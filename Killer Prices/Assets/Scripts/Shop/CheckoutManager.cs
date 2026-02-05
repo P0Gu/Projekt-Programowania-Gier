@@ -17,7 +17,8 @@ namespace KillerPrices.Shop
 
         [Header("Settings")]
         [SerializeField] private float tipPercentage = 0.1f;
-
+        [SerializeField] private float lookSpeed = 2.0f; // Speed for camera look
+        
         // State
         private CustomerController currentCustomer;
         private List<CheckoutItem> spawnedItems = new List<CheckoutItem>();
@@ -26,6 +27,10 @@ namespace KillerPrices.Shop
         private int totalCost;
         private int cashGiven;
         private bool isCheckoutActive = false;
+        
+        // Camera State
+        private float rotationX = 0f;
+        private float rotationY = 0f;
 
         private void Awake()
         {
@@ -73,6 +78,31 @@ namespace KillerPrices.Shop
             // Let's just block input.
         }
 
+        private void Update()
+        {
+            if (!isCheckoutActive) return;
+
+            // Right Click to Look around
+            if (Input.GetMouseButton(1))
+            {
+                // Note: GetAxisraw or GetAxis both work. Using raw for direct connection.
+                float mouseX = Input.GetAxisRaw("Mouse X") * lookSpeed;
+                float mouseY = Input.GetAxisRaw("Mouse Y") * lookSpeed;
+
+                rotationX -= mouseY;
+                rotationY += mouseX;
+                
+                rotationX = Mathf.Clamp(rotationX, -45f, 45f); // Lock pitch to reasonable angles
+                // rotationY could be clamped if we want to limit head turn, e.g. -90 to 90
+                rotationY = Mathf.Clamp(rotationY, -70f, 70f);
+
+                if (checkoutCamera != null)
+                {
+                    checkoutCamera.transform.localRotation = Quaternion.Euler(rotationX, rotationY, 0);
+                }
+            }
+        }
+
         private void SpawnItems(List<GunData> items)
         {
             // Clear old
@@ -92,8 +122,11 @@ namespace KillerPrices.Shop
                 if(prefab == null) continue; // Or spawn default box
 
                 var go = Instantiate(prefab, point.position, point.rotation);
-                // Randomize slightly
-                go.transform.Rotate(0, Random.Range(-45, 45), 0);
+                
+                // Apply Checkout Settings from GunData
+                go.transform.position += data.checkoutDisplayOffset;
+                go.transform.localRotation = Quaternion.Euler(data.checkoutDisplayRotation);
+                go.transform.localScale = Vector3.one * data.checkoutDisplayScale;
                 
                 var script = go.AddComponent<CheckoutItem>();
                 script.Initialize(data);

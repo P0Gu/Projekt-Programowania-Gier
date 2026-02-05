@@ -29,10 +29,14 @@ namespace KillerPrices.Shop
             // currentPrice is now dynamic, no need to set
             
             if (visualModelInstance != null) Object.Destroy(visualModelInstance);
-            if (gun.modelPrefab != null && point != null)
-            {
                 visualModelInstance = Object.Instantiate(gun.modelPrefab, point.position, point.rotation, point);
-            }
+                
+                // "taką skale jak wpisze w gun data taka ma być ustawiana" (Absolute Scale)
+                visualModelInstance.transform.localScale = Vector3.one * gun.shelfDisplayScale;
+                
+                // "dodaj też ustawianie rotacji w wszystkich osiach"
+                // Ustawiamy rotację lokalną względem punktu zaczepienia (ItemSpot)
+                visualModelInstance.transform.localRotation = Quaternion.Euler(gun.shelfDisplayRotation);
         }
 
         public void Clear()
@@ -91,11 +95,13 @@ namespace KillerPrices.Shop
                 {
                     emptySlot.Place(handItem);
                     PlayerInventory.Instance.RemoveSelectedItem();
-                    Debug.Log($"Położono {handItem.displayName} na półce.");
+                    string msg = LocalizationManager.Instance != null ? LocalizationManager.Instance.GetTranslation("PLACE_PLACED") : "Położono na półce.";
+                    Debug.Log($"{msg} ({handItem.displayName})");
                 }
                 else
                 {
-                    Debug.Log("Ta półka jest pełna!");
+                    string msg = LocalizationManager.Instance != null ? LocalizationManager.Instance.GetTranslation("SHELF_FULL") : "Ta półka jest pełna!";
+                    Debug.Log(msg);
                 }
             }
             // Scenariusz 2: Gracz wchodzi w interakcję z przedmiotem (ma pustą rękę) -> Otwórz Menu Cen
@@ -119,22 +125,15 @@ namespace KillerPrices.Shop
                 }
                 else
                 {
-                    Debug.Log("Ta półka jest pusta.");
+                    string msg = LocalizationManager.Instance != null ? LocalizationManager.Instance.GetTranslation("SHELF_EMPTY") : "Ta półka jest pusta.";
+                    Debug.Log(msg);
                 }
             }
         }
 
         public string GetInteractionPrompt()
         {
-            // Prosta logika podpowiedzi
-            if (PlayerInventory.Instance != null && PlayerInventory.Instance.GetSelectedItem() != null)
-            {
-                return "Połóż przedmiot";
-            }
-            else
-            {
-                return "Zdejmij przedmiot";
-            }
+            return "INTERACT_SHELF";
         }
 
         private ShelfSlot GetBestEmptySlot()
@@ -161,6 +160,56 @@ namespace KillerPrices.Shop
                 if (child.name.StartsWith("ItemSpot"))
                 {
                     slots.Add(new ShelfSlot { point = child });
+                }
+            }
+        }
+        // --- Save System Integration ---
+
+        public ShelfSaveData GetShelfData(int index)
+        {
+            var data = new ShelfSaveData
+            {
+                shelfIndex = index
+            };
+
+            for (int i = 0; i < slots.Count; i++)
+            {
+                if (slots[i].IsOccupied)
+                {
+                    // VALIDATION: Check if ID is empty
+                    string itemId = slots[i].currentItem.id;
+                    if (string.IsNullOrEmpty(itemId))
+                    {
+                        itemId = slots[i].currentItem.name; // Use asset name as fallback
+                        Debug.LogWarning($"Shelf: Item '{slots[i].currentItem.displayName}' in slot {i} has empty ID! Using asset name '{itemId}'. Please set the ID field in the Inspector!");
+                    }
+                    
+                    data.slots.Add(new ShelfSlotSaveData
+                    {
+                        slotIndex = i,
+                        itemID = itemId
+                    });
+                }
+            }
+            return data;
+        }
+
+        public void RestoreShelfData(ShelfSaveData data, ItemDatabase db)
+        {
+            if (data == null) return;
+
+            // Clear first
+            foreach (var slot in slots) slot.Clear();
+
+            foreach (var slotData in data.slots)
+            {
+                if (slotData.slotIndex >= 0 && slotData.slotIndex < slots.Count)
+                {
+                    var item = db.GetItem(slotData.itemID);
+                    if (item != null)
+                    {
+                        slots[slotData.slotIndex].Place(item);
+                    }
                 }
             }
         }

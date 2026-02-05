@@ -24,8 +24,8 @@ namespace KillerPrices.AI
         {
             if (currentCustomers >= maxCustomers) return;
 
-            // NEW: Check if shop is open
-            if (ShopManager.Instance != null && !ShopManager.Instance.IsOpen) return;
+            // NEW: Check if shop is open. If Manager is missing, assume closed.
+            if (ShopManager.Instance == null || !ShopManager.Instance.IsOpen) return;
 
             timer += Time.deltaTime;
             if (timer >= spawnInterval)

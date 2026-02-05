@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 334484720}
   - component: {fileID: 334484719}
+  - component: {fileID: 334484721}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -163,6 +164,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &334484721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 334484718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a68c606ff88358409f077ee924a051b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KillerPrices.Systems.SaveManager
+  itemDatabase: {fileID: 11400000, guid: 2e58314946cc33e48be55de8394151cd, type: 2}
 --- !u!1 &633724665
 GameObject:
   m_ObjectHideFlags: 0

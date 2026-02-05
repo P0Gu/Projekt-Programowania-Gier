@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e89ce50599eda2a4fb1548fdd1e90a25, type: 3}
   m_Name: ak47
   m_EditorClassIdentifier: Assembly-CSharp::KillerPrices.Data.GunData
-  id: 
+  id: ak47
   itemType: 0
+  itemSize: 1
   displayName: ak47
   description: 
   baseCost: 300
   baseSellPrice: 400
-  requiredLevel: 4
+  requiredLevel: 1
   icon: {fileID: 21300000, guid: 10df361e2cfb1ff4a98c37d80f515e6c, type: 3}
-  modelPrefab: {fileID: 919132149155446097, guid: 33269b2b610f4c245a712795c1927939, type: 3}
+  modelPrefab: {fileID: 8614082983243984317, guid: 7c478f4225b88374381c99eb54083b2b, type: 3}
+  shelfDisplayScale: 1.5
+  shelfDisplayRotation: {x: 0, y: -90, z: 0}
+  checkoutDisplayOffset: {x: 0, y: 0.2, z: 0}
+  checkoutDisplayRotation: {x: 0, y: -90, z: -90}
+  checkoutDisplayScale: 0.3

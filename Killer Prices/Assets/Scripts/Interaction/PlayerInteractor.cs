@@ -13,6 +13,9 @@ namespace KillerPrices.Interaction
         [SerializeField] private LayerMask interactableLayer;
         [SerializeField] private Transform detectionPoint; // Opcjonalnie: punkt z którego rzucamy promień (np. kamera)
 
+        [Header("UI")]
+        [SerializeField] private UI.InteractionPromptUI interactionPromptUI;
+
         // Referencja do Input System (zakładamy że zostanie zaktualizowany)
         private PlayerControl playerControl;
         private IInteractable currentInteractable;
@@ -20,6 +23,15 @@ namespace KillerPrices.Interaction
         private void Awake()
         {
             playerControl = new PlayerControl();
+        }
+
+        private void Start()
+        {
+            // Auto-find InteractionPromptUI if not assigned
+            if (interactionPromptUI == null)
+            {
+                interactionPromptUI = FindFirstObjectByType<UI.InteractionPromptUI>();
+            }
         }
 
         private void OnEnable()
@@ -80,14 +92,27 @@ namespace KillerPrices.Interaction
                     if (currentInteractable != interactable)
                     {
                         currentInteractable = interactable;
-                        Debug.Log($"Można wejść w interakcję: {currentInteractable.GetInteractionPrompt()}");
-                        // Tu można dodać wyświetlanie UI z podpowiedzią
+                        
+                        // Show interaction prompt
+                        if (interactionPromptUI != null)
+                        {
+                            string promptKey = currentInteractable.GetInteractionPrompt();
+                            interactionPromptUI.Show(promptKey);
+                        }
                     }
                     return;
                 }
             }
 
-            currentInteractable = null;
+            // No interactable found - hide prompt
+            if (currentInteractable != null)
+            {
+                if (interactionPromptUI != null)
+                {
+                    interactionPromptUI.Hide();
+                }
+                currentInteractable = null;
+            }
         }
 
         private void TryInteract()

@@ -40,7 +40,7 @@ namespace KillerPrices.Shop
 
         public string GetInteractionPrompt()
         {
-            return customerQueue.Count > 0 ? $"Obsłuż klienta ({customerQueue.Count} w kolejce)" : "Oczekiwanie na klientów...";
+            return "INTERACT_CHECKOUT";
         }
 
         public Vector3 RegisterCustomer(CustomerController customer)

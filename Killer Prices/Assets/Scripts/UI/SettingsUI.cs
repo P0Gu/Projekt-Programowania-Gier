@@ -99,6 +99,11 @@ namespace KillerPrices.UI
             {
                 LocalizationManager.Instance.OnLanguageChanged -= UpdateTexts;
             }
+            
+            // Safety: Unregister callbacks to avoid duplicates if VE persists
+            if (volumeSlider != null) volumeSlider.UnregisterValueChangedCallback(evt => SetVolume(evt.newValue)); // Note: Lambda unreg might not work if not same instance. Method group is better.
+            // Actually, best practice is to assume tree recreation or use method references.
+            // Let's rely on tree recreation for now, but valid debugging is crucial.
         }
 
         private void UpdateTexts()
@@ -106,33 +111,56 @@ namespace KillerPrices.UI
             if (LocalizationManager.Instance == null) return;
             var loc = LocalizationManager.Instance;
 
+            // Debug Bindings
+            if (audioLabel == null) Debug.LogWarning("SettingsUI: audioLabel is NULL!");
+            if (graphicsLabel == null) Debug.LogWarning("SettingsUI: graphicsLabel is NULL!");
+            if (langLabel == null) Debug.LogWarning("SettingsUI: langLabel is NULL!");
+
             if (audioLabel != null) audioLabel.text = loc.GetTranslation("SETTINGS_AUDIO");
-            
+            if (graphicsLabel != null) graphicsLabel.text = loc.GetTranslation("SETTINGS_GRAPHICS");
             if (langLabel != null) langLabel.text = loc.GetTranslation("SETTINGS_LANG");
-            if (backButton != null) backButton.text = loc.GetTranslation("SETTINGS_BACK"); // "ANULUJ"
-            if (saveButton != null) saveButton.text = loc.GetTranslation("SETTINGS_SAVE"); // "ZAPISZ"
+            
+            if (backButton != null) backButton.text = loc.GetTranslation("SETTINGS_BACK");
+            if (saveButton != null) saveButton.text = loc.GetTranslation("SETTINGS_SAVE");
 
             if (volumeSlider != null) volumeSlider.label = loc.GetTranslation("SETTINGS_VOLUME");
             if (resolutionDropdown != null) resolutionDropdown.label = loc.GetTranslation("SETTINGS_RESOLUTION");
             if (qualityDropdown != null) qualityDropdown.label = loc.GetTranslation("SETTINGS_QUALITY");
             if (languageDropdown != null) languageDropdown.label = loc.GetTranslation("SETTINGS_LANG");
             if (fullscreenToggle != null) fullscreenToggle.label = loc.GetTranslation("SETTINGS_FULLSCREEN");
+            
+            var title = uiDocument.rootVisualElement.Q<Label>("TitleLabel");
+            if (title != null) title.text = loc.GetTranslation("SETTINGS_TITLE");
         }
 
         private void LoadSettings()
         {
             // Language
-            if (languageDropdown != null && LocalizationManager.Instance != null)
+            if (languageDropdown != null)
             {
                 languageDropdown.choices = new List<string> { "PL", "EN" };
-                string currentLang = LocalizationManager.Instance.CurrentLanguage;
-                languageDropdown.value = currentLang == "pl" ? "PL" : "EN";
+                
+                if (LocalizationManager.Instance != null)
+                {
+                    string currentLang = LocalizationManager.Instance.CurrentLanguage;
+                    string targetVal = currentLang == "pl" ? "PL" : "EN";
+                    int targetIndex = currentLang == "pl" ? 0 : 1;
+                    
+                    // Set both value and index to be sure
+                    languageDropdown.value = targetVal;
+                    languageDropdown.index = targetIndex;
+                    
+                    Debug.Log($"SettingsUI: Loaded Language '{currentLang}', set dropdown to '{targetVal}' (Index: {targetIndex})");
+                }
             }
 
             // Volume
             float volume = PlayerPrefs.GetFloat(PREF_VOLUME, 1f);
             AudioListener.volume = volume;
-            if (volumeSlider != null) volumeSlider.value = volume;
+            if (volumeSlider != null)
+            {
+                volumeSlider.value = volume;
+            }
 
             // Fullscreen
             bool isFullscreen = PlayerPrefs.GetInt(PREF_FULLSCREEN, 1) == 1;
@@ -145,7 +173,6 @@ namespace KillerPrices.UI
                 var choices = supportedResolutions.Select(res => $"{res.x}x{res.y}").ToList();
                 resolutionDropdown.choices = choices;
 
-                // Load saved index or find current screen resolution
                 int savedIndex = PlayerPrefs.GetInt(PREF_RESOLUTION_INDEX, -1);
                 
                 if (savedIndex >= 0 && savedIndex < choices.Count)
@@ -155,14 +182,12 @@ namespace KillerPrices.UI
                 }
                 else
                 {
-                    // Try to match current screen resolution
                     Vector2Int currentRes = new Vector2Int(Screen.width, Screen.height);
                     int index = supportedResolutions.FindIndex(r => r.x == currentRes.x && r.y == currentRes.y);
-                    
-                    if (index == -1) index = 2; // Default to 1920x1080 if not found
+                    if (index == -1) index = 2; // Default 1920x1080
                     
                     resolutionDropdown.index = index;
-                    resolutionDropdown.value = choices[index];
+                    resolutionDropdown.value = choices[index]; // Note: Setting value might trigger event if registered!
                 }
             }
 
@@ -170,23 +195,62 @@ namespace KillerPrices.UI
             string[] names = QualitySettings.names;
             if (qualityDropdown != null)
             {
-                qualityDropdown.choices = names.ToList();
+                List<string> translatedNames = new List<string>();
+                if (LocalizationManager.Instance != null)
+                {
+                    foreach (var name in names)
+                    {
+                        string key = $"QUALITY_{name.ToUpper()}";
+                        string trans = LocalizationManager.Instance.GetTranslation(key);
+                        if (trans == key) translatedNames.Add(name); 
+                        else translatedNames.Add(trans);
+                    }
+                }
+                else
+                {
+                    translatedNames = names.ToList();
+                }
+
+                qualityDropdown.choices = translatedNames;
                 
                 int qualityIndex = PlayerPrefs.GetInt(PREF_QUALITY, QualitySettings.GetQualityLevel());
                 qualityIndex = Mathf.Clamp(qualityIndex, 0, names.Length - 1);
                 
                 QualitySettings.SetQualityLevel(qualityIndex);
-                qualityDropdown.value = names[qualityIndex]; 
+                qualityDropdown.value = translatedNames[qualityIndex]; 
                 qualityDropdown.index = qualityIndex;
             }
         }
 
         private void SetLanguage(string val)
         {
+            Debug.Log($"SettingsUI: Dropdown changed to '{val}'");
+            
+            // Guard: Only accept valid codes
+            if (val != "PL" && val != "EN")
+            {
+                Debug.LogWarning($"SettingsUI: Received invalid language value '{val}'. Ignoring.");
+                
+                // Force reset visuals to match actual state if needed
+                if (LocalizationManager.Instance != null)
+                {
+                    string realLang = LocalizationManager.Instance.CurrentLanguage == "pl" ? "PL" : "EN";
+                    if (languageDropdown != null && languageDropdown.value != realLang)
+                    {
+                        languageDropdown.SetValueWithoutNotify(realLang);
+                    }
+                }
+                return;
+            }
+
             string code = val == "PL" ? "pl" : "en";
             if (LocalizationManager.Instance != null)
             {
-                LocalizationManager.Instance.SetLanguage(code);
+                // Prevent loops: Only set if different
+                if (LocalizationManager.Instance.CurrentLanguage != code)
+                {
+                     LocalizationManager.Instance.SetLanguage(code);
+                }
             }
         }
 

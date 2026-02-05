@@ -27,7 +27,7 @@ namespace KillerPrices.Shop
 
         public string GetInteractionPrompt()
         {
-            return interactionText;
+            return "INTERACT_WHOLESALE";
         }
     }
 }

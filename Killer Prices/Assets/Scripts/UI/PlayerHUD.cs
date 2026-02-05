@@ -17,6 +17,8 @@ namespace KillerPrices.UI
 
         private void OnEnable()
         {
+            refreshRetryCount = 0; // Reset retry counter on enable
+            
             if (uiDocument == null)
                 uiDocument = GetComponent<UIDocument>();
             
@@ -54,11 +56,31 @@ namespace KillerPrices.UI
             }
         }
         
+        private int refreshRetryCount = 0;
+        private const int MAX_REFRESH_RETRIES = 5;
+        
         private void RefreshUI()
         {
             if (PlayerStats.Instance != null)
             {
+                // Force update on the Main Thread safely
                 UpdateUI(PlayerStats.Instance.Money, PlayerStats.Instance.Level, PlayerStats.Instance.CurrentXP, PlayerStats.Instance.MaxXP);
+                refreshRetryCount = 0; // Reset counter on success
+            }
+            else
+            {
+                // Retry if Stats not ready yet (e.g. during scene load race)
+                // But limit retries to avoid infinite loop in scenes without PlayerStats (like Main Menu)
+                if (refreshRetryCount < MAX_REFRESH_RETRIES)
+                {
+                    refreshRetryCount++;
+                    Invoke(nameof(RefreshUI), 0.1f);
+                }
+                else
+                {
+                    // Give up after max retries - likely in a scene without PlayerStats
+                    Debug.LogWarning("PlayerHUD: PlayerStats not found after multiple retries. Likely in Main Menu or scene without player.");
+                }
             }
         }
 

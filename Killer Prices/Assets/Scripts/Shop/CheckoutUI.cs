@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 using KillerPrices.Data;
+using KillerPrices.Systems;
 
 namespace KillerPrices.Shop
 {
@@ -17,6 +18,17 @@ namespace KillerPrices.Shop
         private Label paidLabel;
         private TextField changeInput;
         private Button finishButton;
+
+        private void Update()
+        {
+            if (mainContainer != null && mainContainer.style.display == DisplayStyle.Flex)
+            {
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                {
+                    OnFinishClicked();
+                }
+            }
+        }
 
         private void OnEnable()
         {
@@ -34,6 +46,13 @@ namespace KillerPrices.Shop
 
                 if (finishButton != null) finishButton.clicked += OnFinishClicked;
                 
+                // Subscribe to language changes
+                if (LocalizationManager.Instance != null)
+                {
+                    LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
+                }
+                
+                RefreshUI(); // Initial update
                 Debug.Log("CheckoutUI: Initialized.");
                 Hide(); 
             }
@@ -41,6 +60,41 @@ namespace KillerPrices.Shop
             {
                 Debug.LogError("CheckoutUI: Root Null!");
             }
+        }
+
+        private void OnDisable()
+        {
+            if (LocalizationManager.Instance != null)
+            {
+                LocalizationManager.Instance.OnLanguageChanged -= RefreshUI;
+            }
+        }
+
+        private int currentScannedTotal = 0;
+        private int currentCashGiven = 0;
+
+        private void RefreshUI()
+        {
+            if (root == null || LocalizationManager.Instance == null) return;
+
+            // Update static labels
+            var headerLabel = root.Q<Label>("CashRegisterLabel");
+            if (headerLabel != null)
+                headerLabel.text = LocalizationManager.Instance.GetTranslation("CHECKOUT_HEADER");
+
+            var scannedLabel = root.Q<Label>("ScannedProductsLabel");
+            if (scannedLabel != null)
+                scannedLabel.text = LocalizationManager.Instance.GetTranslation("CHECKOUT_SCANNED");
+
+            var changeLabel = root.Q<Label>("input-label");
+            if (changeLabel != null)
+                changeLabel.text = LocalizationManager.Instance.GetTranslation("CHECKOUT_CHANGE");
+
+            if (finishButton != null)
+                finishButton.text = LocalizationManager.Instance.GetTranslation("CHECKOUT_FINISH");
+
+            // Refresh dynamic labels with current values
+            UpdateTotals(currentScannedTotal, currentCashGiven);
         }
 
         public void Show()
@@ -103,8 +157,17 @@ namespace KillerPrices.Shop
 
         public void UpdateTotals(int scannedTotal, int cashGiven)
         {
-            if (totalLabel != null) totalLabel.text = $"Suma: ${scannedTotal}";
-            if (paidLabel != null) paidLabel.text = $"Otrzymano: ${cashGiven}";
+            currentScannedTotal = scannedTotal;
+            currentCashGiven = cashGiven;
+
+            if (LocalizationManager.Instance != null)
+            {
+                if (totalLabel != null)
+                    totalLabel.text = string.Format(LocalizationManager.Instance.GetTranslation("CHECKOUT_TOTAL"), scannedTotal);
+                
+                if (paidLabel != null)
+                    paidLabel.text = string.Format(LocalizationManager.Instance.GetTranslation("CHECKOUT_RECEIVED"), cashGiven);
+            }
         }
 
         public void EnablePayment()

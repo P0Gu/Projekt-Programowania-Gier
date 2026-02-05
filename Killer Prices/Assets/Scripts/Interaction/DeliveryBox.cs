@@ -18,7 +18,7 @@ namespace KillerPrices.Interaction
 
         public string GetInteractionPrompt()
         {
-            return $"Podnieść {content?.displayName}";
+            return "INTERACT_PICKUP";
         }
 
         public void Initialize(GunData gun)

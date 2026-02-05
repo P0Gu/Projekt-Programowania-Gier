@@ -12,10 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e89ce50599eda2a4fb1548fdd1e90a25, type: 3}
   m_Name: Glock
   m_EditorClassIdentifier: Assembly-CSharp::KillerPrices.Data.GunData
-  id: 
+  id: Glock17
+  itemType: 0
+  itemSize: 0
   displayName: Glock17
   description: 
   baseCost: 100
   baseSellPrice: 150
+  requiredLevel: 0
   icon: {fileID: 21300000, guid: bce7341c83742e84f9937fbe99148691, type: 3}
-  modelPrefab: {fileID: 3675681162146492346, guid: 25bf78dab7f95f94ab38888918ce4d5f, type: 3}
+  modelPrefab: {fileID: 6247331314187258184, guid: 25bf78dab7f95f94ab38888918ce4d5f, type: 3}
+  shelfDisplayScale: 1.15
+  shelfDisplayRotation: {x: 0, y: -90, z: 0}
+  checkoutDisplayOffset: {x: 0, y: 0.2, z: 0}
+  checkoutDisplayRotation: {x: 0, y: 90, z: 90}
+  checkoutDisplayScale: 0.351351

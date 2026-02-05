@@ -37,12 +37,28 @@ namespace KillerPrices.Systems
             Money = startMoney;
             Level = startLevel;
             MaxXP = CalculateMaxXP(Level);
+            Debug.Log($"PlayerStats: Awake. Initialized with Default Money: {Money}");
         }
 
         private void Start()
         {
             // Wymuś odświeżenie UI na starcie
             NotifyStatsChanged();
+            Debug.Log($"PlayerStats: Start. Current Money: {Money}");
+        }
+
+        // ...
+
+        public void LoadFromSaveData(GameSaveData data)
+        {
+            Debug.Log($"PlayerStats: Loading Data... Old Money: {Money}, New Money: {data.money}");
+            Money = data.money;
+            Level = data.level;
+            CurrentXP = data.currentXP;
+            MaxXP = CalculateMaxXP(Level);
+            
+            NotifyStatsChanged();
+            Debug.Log($"PlayerStats: Data Loaded. Money is now: {Money}");
         }
 
         public void AddMoney(int amount)
@@ -87,85 +103,10 @@ namespace KillerPrices.Systems
             return 100f * Mathf.Pow(1.2f, level - 1);
         }
 
-        public void Save()
-        {
-            // Stats
-            PlayerPrefs.SetInt("Stats_Money", Money);
-            PlayerPrefs.SetInt("Stats_Level", Level);
-            PlayerPrefs.SetFloat("Stats_XP", CurrentXP);
 
-            // Player Position & Rotation
-            var player = FindFirstObjectByType<Controls>();
-            if (player != null)
-            {
-                Vector3 pos = player.transform.position;
-                PlayerPrefs.SetFloat("Player_PosX", pos.x);
-                PlayerPrefs.SetFloat("Player_PosY", pos.y);
-                PlayerPrefs.SetFloat("Player_PosZ", pos.z);
 
-                // Save Camera Rotation (Head) if possible, or Player Rotation (Body)
-                // Assuming Camera.main is the head
-                if (Camera.main != null)
-                {
-                    Quaternion rot = Camera.main.transform.rotation;
-                    PlayerPrefs.SetFloat("Player_RotX", rot.x);
-                    PlayerPrefs.SetFloat("Player_RotY", rot.y);
-                    PlayerPrefs.SetFloat("Player_RotZ", rot.z);
-                    PlayerPrefs.SetFloat("Player_RotW", rot.w);
-                }
-            }
-
-            PlayerPrefs.Save();
-            Debug.Log("Game Saved!");
-        }
-
-        public void Load()
-        {
-            Money = PlayerPrefs.GetInt("Stats_Money", startMoney);
-            Level = PlayerPrefs.GetInt("Stats_Level", startLevel);
-            CurrentXP = PlayerPrefs.GetFloat("Stats_XP", 0f);
-            MaxXP = CalculateMaxXP(Level);
-            
-            NotifyStatsChanged();
-            Debug.Log("Game Loaded!");
-        }
-
-        // Helper to apply position after scene load
-        public void ApplySavedState()
-        {
-            if (!PlayerPrefs.HasKey("Player_PosX")) return;
-
-            var player = FindFirstObjectByType<Controls>();
-            if (player != null)
-            {
-                float x = PlayerPrefs.GetFloat("Player_PosX");
-                float y = PlayerPrefs.GetFloat("Player_PosY");
-                float z = PlayerPrefs.GetFloat("Player_PosZ");
-                
-                // Disable CharacterController to teleport
-                var cc = player.GetComponent<CharacterController>();
-                if (cc != null) cc.enabled = false;
-                
-                player.transform.position = new Vector3(x, y, z);
-                
-                if (cc != null) cc.enabled = true;
-
-                // Rotation
-                if (Camera.main != null && PlayerPrefs.HasKey("Player_RotX"))
-                {
-                   float rx = PlayerPrefs.GetFloat("Player_RotX");
-                   float ry = PlayerPrefs.GetFloat("Player_RotY");
-                   float rz = PlayerPrefs.GetFloat("Player_RotZ");
-                   float rw = PlayerPrefs.GetFloat("Player_RotW");
-                   
-                   Camera.main.transform.rotation = new Quaternion(rx, ry, rz, rw);
-                   
-                   // Also sync body Y rotation if needed
-                   // Vector3 euler = Camera.main.transform.rotation.eulerAngles;
-                   // player.transform.rotation = Quaternion.Euler(0, euler.y, 0); 
-                }
-            }
-        }
+        // Helper to apply position after scene load is now deprecated or handled elsewhere, 
+        // as SaveManager doesn't focus on player position in this iteration yet.
 
         private void NotifyStatsChanged()
         {

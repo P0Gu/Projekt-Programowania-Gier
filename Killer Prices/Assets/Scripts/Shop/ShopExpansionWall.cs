@@ -43,7 +43,7 @@ namespace KillerPrices.Shop
 
         public string GetInteractionPrompt()
         {
-            return isPurchased ? "" : $"Rozbuduj sklep (${Cost})";
+            return isPurchased ? "" : "INTERACT_EXPAND";
         }
 
         public void Unlock()

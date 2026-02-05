@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c899561be673fa248a0359154896a818, type: 3}
+  m_Name: MainItemDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::KillerPrices.Data.ItemDatabase
+  allItems:
+  - {fileID: 11400000, guid: d776d048a9c4ae6458ec4f41bd0d2504, type: 2}
+  - {fileID: 11400000, guid: 978f564abc4a645498f6c5a37e91cc0f, type: 2}
+  - {fileID: 11400000, guid: 494d7a5b3c149874c938545dfe61bd47, type: 2}
+  - {fileID: 11400000, guid: 88019ea8a0bbc5a42b59fde4af8ed4e3, type: 2}
+  - {fileID: 11400000, guid: 81aa6a61f6cf47048ae1c0f29956ebe9, type: 2}
+  - {fileID: 11400000, guid: 89f0181591e473a4a8a276751d2e1149, type: 2}
+  - {fileID: 11400000, guid: 5826fbaf113d9a1489247338a43701fe, type: 2}
+  - {fileID: 11400000, guid: 6431f487ba5c5c8449ad286788384b06, type: 2}
+  - {fileID: 11400000, guid: 2331627049433824fa3c45dc082db522, type: 2}
+  - {fileID: 11400000, guid: d24762ca97a9e684a844c42c27216610, type: 2}
+  - {fileID: 11400000, guid: bf8dc01d71408e44292f45dcd8c9453c, type: 2}
+  - {fileID: 11400000, guid: 4459503a755d063438dafa8ad8947c8c, type: 2}
+  - {fileID: 11400000, guid: 55c1ce35457411b4db522a34f2deb135, type: 2}
+  - {fileID: 11400000, guid: 482ba7e96168d7440ba5e3e0d9cc0e9d, type: 2}
+  - {fileID: 11400000, guid: fc0a9a3fc9680f640a0e8eeb18f85a26, type: 2}
+  - {fileID: 11400000, guid: 51412630788e606468b9b8ea22e40cc1, type: 2}

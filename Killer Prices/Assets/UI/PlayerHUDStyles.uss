@@ -69,3 +69,24 @@
     border-width: 1px;
     border-color: black;
 }
+
+/* Interaction Prompt */
+.interaction-prompt {
+    position: absolute;
+    bottom: 25%;
+    left: 50%;
+    translate: -50% 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    padding: 12px 24px;
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.3);
+    display: none; /* Hidden by default */
+}
+
+.interaction-prompt-text {
+    font-size: 18px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}

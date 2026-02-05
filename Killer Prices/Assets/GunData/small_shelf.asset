@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e89ce50599eda2a4fb1548fdd1e90a25, type: 3}
   m_Name: small_shelf
   m_EditorClassIdentifier: Assembly-CSharp::KillerPrices.Data.GunData
-  id: 
+  id: small_shelf
   itemType: 1
-  displayName: shelf
+  itemSize: 0
+  displayName: small_shelf
   description: 
   baseCost: 100
   baseSellPrice: 0
   requiredLevel: 0
   icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
-  modelPrefab: {fileID: 6435122309859818725, guid: b4fa624f8ee64394da4245eabda667af, type: 3}
+  modelPrefab: {fileID: 4391513626391404081, guid: 8e80e0b0d9036aa48824c2220144ded3, type: 3}
+  shelfDisplayScale: 0.15
+  shelfDisplayRotation: {x: 0, y: 0, z: 0}
+  checkoutDisplayOffset: {x: 0, y: 0, z: 0}
+  checkoutDisplayRotation: {x: 0, y: 0, z: 0}
+  checkoutDisplayScale: 1

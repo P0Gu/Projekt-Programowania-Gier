@@ -2,11 +2,11 @@
     <ui:Style src="project://database/Assets/UI/CheckoutStyles.uss" />
     <ui:VisualElement name="MainContainer" class="main-container">
         <!-- Header -->
-        <ui:Label text="KASA FISKALNA" class="header-label" />
+        <ui:Label text="KASA FISKALNA" class="header-label" name="CashRegisterLabel"/>
 
         <!-- Middle: Items List -->
         <ui:VisualElement class="list-container">
-            <ui:Label text="Zeskanowane Produkty:" class="section-title" />
+            <ui:Label text="Zeskanowane Produkty:" class="section-title" name="ScannedProductsLabel"/>
             <ui:ScrollView name="ItemsList" class="items-list" />
         </ui:VisualElement>
 

@@ -17,7 +17,8 @@ namespace KillerPrices.AI
         Evaluating,
         WalkingToCounter, 
         WaitingAtCounter, 
-        Leaving 
+        Leaving,
+        Wandering
     }
 
     [RequireComponent(typeof(NavMeshAgent))]
@@ -26,9 +27,10 @@ namespace KillerPrices.AI
         [Header("AI")]
         [SerializeField] private float stopDistance = 1.0f;
         [SerializeField] private float browsingTime = 2.0f;
+        [SerializeField] private float wanderTimeIfNotFound = 6.0f;
 
         [Header("Request & Feedback")]
-        [SerializeField] private SpriteRenderer bubbleIcon; 
+
         [SerializeField] private GameObject bubbleObject;
         [SerializeField] private TMP_Text feedbackText; // Komponent tekstowy (TextMeshPro)
 
@@ -64,14 +66,8 @@ namespace KillerPrices.AI
             exitTarget = exit;
             onCustomerLeft = onLeftCallback;
 
-            if (bubbleIcon && initialRequest)
-            {
-                bubbleIcon.sprite = initialRequest.icon;
-                bubbleIcon.gameObject.SetActive(true);
-            }
-            
-            if (feedbackText) feedbackText.gameObject.SetActive(false); // Ukryj tekst na start
-            if (bubbleObject) bubbleObject.SetActive(true);
+            if (feedbackText) feedbackText.gameObject.SetActive(false);
+            if (bubbleObject) bubbleObject.SetActive(false); // Ukryj dymek na start (brak ikony)
 
             StartCoroutine(ShoppingLoop());
         }
@@ -83,12 +79,8 @@ namespace KillerPrices.AI
             {
                 CurrentDesiredItem = ShoppingQueue.Dequeue();
                 
-                // Aktualizuj dymek z pragnieniem
-                if(bubbleIcon) 
-                {
-                    bubbleIcon.sprite = CurrentDesiredItem.icon;
-                    bubbleIcon.gameObject.SetActive(true);
-                }
+                // Ikona usunięta - nie aktualizujemy dymka w pętli
+
 
                 yield return StartCoroutine(ProcessItemRequest(CurrentDesiredItem));
                 
@@ -116,11 +108,11 @@ namespace KillerPrices.AI
             if (targetSlot == null)
             {
                 Debug.Log($"Brak {itemToFind.displayName} na półkach.");
-                // Logika Substytutu (uproszczona)
-                if (Random.value > 0.5f) 
-                {
-                     // Debug.Log("Klient szuka substytutu...");
-                }
+                
+                // Klient błąka się chwilę, udając że szuka
+                ShowFeedback("Gdzie to jest?", Color.yellow);
+                yield return StartCoroutine(WanderAroundStore());
+                
                 yield break;
             }
 
@@ -175,8 +167,7 @@ namespace KillerPrices.AI
             {
                 isShowingFeedback = true;
                 
-                // Ukryj ikonę broni, pokaż tekst
-                if (bubbleIcon) bubbleIcon.gameObject.SetActive(false);
+                // Pokaż tekst
                 
                 feedbackText.text = text;
                 feedbackText.color = color;
@@ -198,16 +189,8 @@ namespace KillerPrices.AI
             if (feedbackText) feedbackText.gameObject.SetActive(false);
             
             // Logika po ukryciu tekstu
-            if (CurrentState == CustomerState.Leaving || CurrentState == CustomerState.WalkingToCounter || CurrentState == CustomerState.WaitingAtCounter)
-            {
-                // Jeśli wychodzimy lub idziemy do kasy - ukryj cały dymek
-                if (bubbleObject) bubbleObject.SetActive(false);
-            }
-            else
-            {
-                // Jeśli nadal jesteśmy w sklepie (szukamy dalej) - przywróć ikonę broni
-                if (bubbleIcon) bubbleIcon.gameObject.SetActive(true);
-            }
+            // Po ukryciu tekstu zawsze ukrywamy dymek (bo nie ma już ikon)
+            if (bubbleObject) bubbleObject.SetActive(false);
         }
 
         private void TakeItemFromShelf()
@@ -310,6 +293,46 @@ namespace KillerPrices.AI
             }
         }
 
+        private IEnumerator WanderAroundStore()
+        {
+            CurrentState = CustomerState.Wandering;
+            float endTime = Time.time + wanderTimeIfNotFound;
+
+            while (Time.time < endTime)
+            {
+                // Find random point 
+                Vector3 randomPoint = GetRandomNavMeshPoint(transform.position, 8.0f);
+                agent.SetDestination(randomPoint);
+                agent.isStopped = false;
+
+                // Wait until reached
+                while (agent.pathPending || agent.remainingDistance > stopDistance)
+                {
+                    if (Time.time > endTime) break;
+                    yield return null;
+                }
+
+                if (Time.time > endTime) break;
+
+                // Wait a bit ("looking around")
+                yield return new WaitForSeconds(Random.Range(1.0f, 2.5f));
+            }
+        }
+
+        private Vector3 GetRandomNavMeshPoint(Vector3 center, float range)
+        {
+            for (int i = 0; i < 30; i++)
+            {
+                Vector3 randomPoint = center + Random.insideUnitSphere * range;
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(randomPoint, out hit, 1.0f, NavMesh.AllAreas))
+                {
+                    return hit.position;
+                }
+            }
+            return center;
+        }
+
         private void Update()
         {
              if (CurrentState == CustomerState.Leaving)
@@ -318,6 +341,20 @@ namespace KillerPrices.AI
                 {
                     onCustomerLeft?.Invoke(this);
                     Destroy(gameObject);
+                }
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (bubbleObject != null && bubbleObject.activeInHierarchy)
+            {
+                // Znajdź główną kamerę (jeśli nie jest zcache'owana, Camera.main robi to wewnętrznie, ale warto uważać w update)
+                Camera cam = Camera.main;
+                if (cam != null)
+                {
+                    // Billboard: Ustaw rotację taką samą jak kamera, żeby tekst był zawsze przodem do gracza
+                    bubbleObject.transform.rotation = cam.transform.rotation;
                 }
             }
         }

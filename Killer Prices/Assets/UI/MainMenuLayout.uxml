@@ -13,4 +13,17 @@
             <ui:Button text="WYJŚCIE" name="QuitButton" class="menu-button" />
         </ui:VisualElement>
     </ui:VisualElement>
+
+    <!-- Popup Window (Overlay) -->
+    <ui:VisualElement name="PopupOverlay" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; display: none;">
+        <ui:VisualElement class="menu-panel" style="background-color: rgb(40, 44, 52); border-width: 2px; border-color: white; padding: 20px; width: 50%; align-items: center;">
+            <ui:Label text="Message..." name="PopupMessage" style="color: white; font-size: 24px; white-space: normal; margin-bottom: 30px; -unity-text-align: middle-center;" />
+            
+            <ui:VisualElement style="flex-direction: row; justify-content: center; width: 100%;">
+                <ui:Button text="TAK" name="PopupYesBtn" class="menu-button" style="width: 150px; margin: 10px; background-color: rgba(50, 255, 50, 0.3);" />
+                <ui:Button text="NIE" name="PopupNoBtn" class="menu-button" style="width: 150px; margin: 10px; background-color: rgba(255, 50, 50, 0.3);" />
+                <ui:Button text="OK" name="PopupOkBtn" class="menu-button" style="display: none; width: 150px; margin: 10px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>

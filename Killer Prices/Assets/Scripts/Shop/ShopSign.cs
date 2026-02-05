@@ -37,8 +37,8 @@ namespace KillerPrices.Shop
 
         public string GetInteractionPrompt()
         {
-            if (ShopManager.Instance == null) return "Shop Manager Missing";
-            return ShopManager.Instance.IsOpen ? "ZAMKNIJ SKLEP" : "OTWÓRZ SKLEP";
+            if (ShopManager.Instance == null) return "INTERACT_OPEN_SHOP";
+            return ShopManager.Instance.IsOpen ? "INTERACT_CLOSE_SHOP" : "INTERACT_OPEN_SHOP";
         }
 
         private void UpdateVisuals(bool isOpen)

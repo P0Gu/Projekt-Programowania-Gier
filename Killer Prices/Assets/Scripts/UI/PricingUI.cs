@@ -42,7 +42,43 @@ namespace KillerPrices.UI
             root.Q<Button>("ConfirmButton").clicked += ConfirmPrice;
             root.Q<Button>("TakeItemButton").clicked += TakeItem;
 
+            // Subscribe to language changes
+            if (LocalizationManager.Instance != null)
+            {
+                LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
+            }
+
+            RefreshUI(); // Initial update
             Close(); // Domyślnie zamknięte
+        }
+
+        private void OnDisable()
+        {
+            if (LocalizationManager.Instance != null)
+            {
+                LocalizationManager.Instance.OnLanguageChanged -= RefreshUI;
+            }
+        }
+
+        private void RefreshUI()
+        {
+            if (root == null) return;
+
+            // Update button labels
+            var confirmBtn = root.Q<Button>("ConfirmButton");
+            var takeBtn = root.Q<Button>("TakeItemButton");
+
+            if (confirmBtn != null && LocalizationManager.Instance != null)
+                confirmBtn.text = LocalizationManager.Instance.GetTranslation("PRICING_CONFIRM");
+            
+            if (takeBtn != null && LocalizationManager.Instance != null)
+                takeBtn.text = LocalizationManager.Instance.GetTranslation("PRICING_TAKE");
+
+            // Refresh display if slot is open
+            if (currentSlot != null)
+            {
+                UpdateDisplay();
+            }
         }
 
         public void Open(ShelfSlot slot)
@@ -86,15 +122,18 @@ namespace KillerPrices.UI
             int baseCost = currentSlot.currentItem.baseCost;
             int profit = currentEditPrice - baseCost;
             
-            if (profit >= 0)
+            if (LocalizationManager.Instance != null)
             {
-                profitLabel.text = $"Zysk: ${profit}";
-                profitLabel.style.color = new StyleColor(new Color(0.5f, 1f, 0.5f)); // Green
-            }
-            else
-            {
-                profitLabel.text = $"Strata: ${profit}";
-                profitLabel.style.color = new StyleColor(new Color(1f, 0.5f, 0.5f)); // Red
+                if (profit >= 0)
+                {
+                    profitLabel.text = string.Format(LocalizationManager.Instance.GetTranslation("PRICING_PROFIT"), profit);
+                    profitLabel.style.color = new StyleColor(new Color(0.5f, 1f, 0.5f)); // Green
+                }
+                else
+                {
+                    profitLabel.text = string.Format(LocalizationManager.Instance.GetTranslation("PRICING_LOSS"), profit);
+                    profitLabel.style.color = new StyleColor(new Color(1f, 0.5f, 0.5f)); // Red
+                }
             }
         }
 
